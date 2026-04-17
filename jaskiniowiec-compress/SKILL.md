@@ -1,10 +1,10 @@
 ---
-name: compress
+name: jaskiniowiec-compress
 description: >
-  Kompresuje naturalnojęzykowe pliki pamięci (CLAUDE.md, todo, preferencje)
+  Kompresuje naturalnojęzykowe pliki pamięci (`CLAUDE.md`, todo, preferencje)
   do stylu jaskiniowca, żeby oszczędzać tokeny wejściowe. Zachowuje całą
   treść techniczną, kod, URL-e i strukturę.
-  Skondensowana wersja nadpisuje oryginał. Czytelny backup trafia do
+  Wersja skompresowana nadpisuje oryginał. Czytelny backup trafia do
   FILE.original.md.
   Wyzwalacz: /jaskiniowiec:compress <ścieżka> albo „skompresuj plik pamięci”.
 ---
@@ -21,11 +21,11 @@ Kompresuj pliki naturalnojęzykowe (`CLAUDE.md`, todo, preferencje) do stylu jas
 
 ## Proces
 
-1. Ten `SKILL.md` leży obok katalogu `scripts/`. Znajdź ten katalog.
+1. Skrypty kompresji leżą w `jaskiniowiec-compress/scripts/` obok tego `SKILL.md`. Jeśli ścieżka nie jest oczywista, wyszukaj `jaskiniowiec-compress/scripts/__main__.py`.
 
 2. Uruchom:
 
-cd <katalog_z_tym_SKILL.md> && python3 -m scripts <absolute_filepath>
+cd jaskiniowiec-compress && python3 -m scripts <absolute_filepath>
 
 3. CLI zrobi:
 - wykrycie typu pliku (bez tokenów)
@@ -94,7 +94,7 @@ Oryginał:
 > You should always make sure to run the test suite before pushing any changes to the main branch. This is important because it helps catch bugs early and prevents broken builds from being deployed to production.
 
 Kompresja:
-> Uruchom testy przed pushem na main. Wcześnie łapiesz błędy, nie wypychasz zepsutego produkcyjnego buildu.
+> Uruchom testy przed pushem na main. Wcześnie łapiesz błędy, nie wypychasz zepsutego buildu na produkcję.
 
 Oryginał:
 > The application uses a microservices architecture with the following components. The API gateway handles all incoming requests and routes them to the appropriate service. The authentication service is responsible for managing user sessions and JWT tokens.

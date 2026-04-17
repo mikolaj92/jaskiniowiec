@@ -2,23 +2,30 @@
 from pathlib import Path
 import sys
 
-# Support both direct execution and module import
 try:
     from .validate import validate
 except ImportError:
-    sys.path.insert(0, str(Path(__file__).parent))
-    from validate import validate
+    import importlib.util
+
+    validate_path = Path(__file__).with_name("validate.py")
+    spec = importlib.util.spec_from_file_location("validate_fallback", validate_path)
+    if spec is None or spec.loader is None:
+        raise
+    validate_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(validate_module)
+    validate = validate_module.validate
 
 try:
-    import tiktoken
-    _enc = tiktoken.get_encoding("o200k_base")
+    from importlib import import_module
+
+    _enc = import_module("tiktoken").get_encoding("o200k_base")
 except ImportError:
     _enc = None
 
 
 def count_tokens(text):
     if _enc is None:
-        return len(text.split())  # fallback: word count
+        return len(text.split())
     return len(_enc.encode(text))
 
 
@@ -42,7 +49,6 @@ def print_table(rows):
 
 
 def main():
-    # Direct file pair: python3 benchmark.py original.md compressed.md
     if len(sys.argv) == 3:
         orig = Path(sys.argv[1]).resolve()
         comp = Path(sys.argv[2]).resolve()
@@ -55,8 +61,7 @@ def main():
         print_table([benchmark_pair(orig, comp)])
         return
 
-    # Glob mode: repo_root/tests/caveman-compress/
-    tests_dir = Path(__file__).parent.parent.parent / "tests" / "caveman-compress"
+    tests_dir = Path(__file__).parent.parent.parent / "tests" / "jaskiniowiec-compress"
     if not tests_dir.exists():
         print(f"❌ Tests dir not found: {tests_dir}")
         sys.exit(1)
