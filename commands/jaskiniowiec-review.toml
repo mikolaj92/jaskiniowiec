@@ -1,0 +1,2 @@
+description = "Jednolinijkowe komentarze code review"
+prompt = "Zrecenzuj bieżące zmiany w kodzie. Jedna linia na problem. Format: L<line>: <severity> <problem>. <fix>. Severity: bug, risk, nit, q. Pomiń pochwały. Pomiń oczywistości. Jeśli kod wygląda dobrze, napisz 'LGTM' i zakończ."

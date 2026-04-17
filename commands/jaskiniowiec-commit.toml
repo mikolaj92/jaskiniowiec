@@ -1,0 +1,2 @@
+description = "Wygeneruj zwięzły komunikat commita w stylu jaskiniowca"
+prompt = "Wygeneruj zwięzły komunikat commita dla aktualnych staged changes. Format Conventional Commits. Tytuł: ≤50 znaków, tryb rozkazujący, małe litery po typie. Body tylko gdy 'why' nie wynika z tytułu. Najpierw dlaczego, potem co. Bez kropki na końcu tytułu."
