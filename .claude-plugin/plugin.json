@@ -1,9 +1,9 @@
 {
-  "name": "caveman",
-  "description": "Ultra-compressed communication mode. Cuts ~75% of tokens while keeping full technical accuracy by speaking like a caveman.",
+  "name": "jaskiniowiec",
+  "description": "Polski tryb ultra-zwięzłej komunikacji. Tnie zbędne słowa, zachowuje pełną treść techniczną.",
   "author": {
-    "name": "Julius Brussee",
-    "url": "https://github.com/JuliusBrussee"
+    "name": "Mikołaj Maciąg",
+    "url": "https://github.com/mikolaj92"
   },
   "hooks": {
     "SessionStart": [
@@ -11,9 +11,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/caveman-activate.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/jaskiniowiec-activate.js\"",
             "timeout": 5,
-            "statusMessage": "Loading caveman mode..."
+            "statusMessage": "Ładowanie trybu jaskiniowca..."
           }
         ]
       }
@@ -23,9 +23,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/caveman-mode-tracker.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/jaskiniowiec-mode-tracker.js\"",
             "timeout": 5,
-            "statusMessage": "Tracking caveman mode..."
+            "statusMessage": "Śledzenie trybu jaskiniowca..."
           }
         ]
       }

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Caveman Compress CLI
+CLI kompresji Jaskiniowca.
 
-Usage:
-    caveman <filepath>
+Użycie:
+    jaskiniowiec <filepath>
 """
 
 import sys
@@ -14,7 +14,7 @@ from .detect import detect_file_type, should_compress
 
 
 def print_usage():
-    print("Usage: caveman <filepath>")
+    print("Użycie: jaskiniowiec <filepath>")
 
 
 def main():
@@ -24,48 +24,44 @@ def main():
 
     filepath = Path(sys.argv[1])
 
-    # Check file exists
     if not filepath.exists():
-        print(f"❌ File not found: {filepath}")
+        print(f"❌ Nie znaleziono pliku: {filepath}")
         sys.exit(1)
 
     if not filepath.is_file():
-        print(f"❌ Not a file: {filepath}")
+        print(f"❌ To nie jest plik: {filepath}")
         sys.exit(1)
 
     filepath = filepath.resolve()
 
-    # Detect file type
     file_type = detect_file_type(filepath)
+    print(f"Wykryto: {file_type}")
 
-    print(f"Detected: {file_type}")
-
-    # Check if compressible
     if not should_compress(filepath):
-        print("Skipping: file is not natural language (code/config)")
+        print("Pomijam: plik nie wygląda na naturalny język (kod/config)")
         sys.exit(0)
 
-    print("Starting caveman compression...\n")
+    print("Start kompresji jaskiniowca...\n")
 
     try:
         success = compress_file(filepath)
 
         if success:
-            print("\nCompression completed successfully")
+            print("\nKompresja zakończona powodzeniem")
             backup_path = filepath.with_name(filepath.stem + ".original.md")
-            print(f"Compressed: {filepath}")
-            print(f"Original:   {backup_path}")
+            print(f"Skompresowano: {filepath}")
+            print(f"Oryginał:      {backup_path}")
             sys.exit(0)
         else:
-            print("\n❌ Compression failed after retries")
+            print("\n❌ Kompresja nie powiodła się po ponowieniach")
             sys.exit(2)
 
     except KeyboardInterrupt:
-        print("\nInterrupted by user")
+        print("\nPrzerwano przez użytkownika")
         sys.exit(130)
 
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\n❌ Błąd: {e}")
         sys.exit(1)
 
 

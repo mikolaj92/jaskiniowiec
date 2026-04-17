@@ -1,0 +1,40 @@
+{
+  "name": "jaskiniowiec",
+  "version": "0.1.0",
+  "description": "Polski tryb ultra-zwięzłej komunikacji. Mniej słów, pełna precyzja techniczna.",
+  "author": {
+    "name": "Mikołaj Maciąg",
+    "url": "https://github.com/mikolaj92"
+  },
+  "homepage": "https://github.com/mikolaj92/jaskiniowiec",
+  "repository": "https://github.com/mikolaj92/jaskiniowiec",
+  "license": "MIT",
+  "keywords": [
+    "productivity",
+    "communication",
+    "brevity",
+    "writing",
+    "polish"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Jaskiniowiec",
+    "shortDescription": "Mów jak jaskiniowiec. Mniej waty. Pełna precyzja techniczna.",
+    "longDescription": "Polski tryb ultra-zwięzłej komunikacji dla Codex. Używaj mniej słów. Zachowaj dokładną treść techniczną.",
+    "developerName": "Mikołaj Maciąg",
+    "category": "Productivity",
+    "capabilities": [
+      "Write"
+    ],
+    "websiteURL": "https://github.com/mikolaj92/jaskiniowiec",
+    "privacyPolicyURL": "https://github.com/mikolaj92/jaskiniowiec/blob/main/README.md",
+    "termsOfServiceURL": "https://github.com/mikolaj92/jaskiniowiec/blob/main/LICENSE",
+    "defaultPrompt": [
+      "Użyj trybu jaskiniowiec. Wytnij filler. Zachowaj pełną precyzję techniczną."
+    ],
+    "composerIcon": "./assets/jaskiniowiec-small.svg",
+    "logo": "./assets/jaskiniowiec.svg",
+    "screenshots": [],
+    "brandColor": "#6B7280"
+  }
+}

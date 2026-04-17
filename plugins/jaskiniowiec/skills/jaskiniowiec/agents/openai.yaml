@@ -1,0 +1,6 @@
+interface:
+  display_name: "Jaskiniowiec"
+  short_description: "Mów jak jaskiniowiec. Wytnij watę. Zachowaj pełną precyzję techniczną."
+  icon_small: "./assets/jaskiniowiec-small.svg"
+  icon_large: "./assets/jaskiniowiec.svg"
+  default_prompt: "Użyj trybu jaskiniowiec. Odpowiadaj krótko, wytnij filler i zachowaj dokładną treść techniczną."
