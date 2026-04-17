@@ -1,22 +1,22 @@
-# Contributing
+# Współtworzenie
 
-Improvements to the SKILL.md prompt are welcome — open a PR with before/after examples showing the change.
+Ulepszenia promptów w `SKILL.md` są mile widziane — otwórz PR z przykładami przed/po pokazującymi zmianę.
 
-## How
+## Jak
 
-1. Fork repo
-2. Edit `skills/caveman/SKILL.md` — this is the only copy you need to touch
-3. Open PR with:
-   - **Before:** what caveman say now
-   - **After:** what caveman say with change
-   - One sentence why change better
+1. Zrób fork repozytorium
+2. Edytuj `skills/jaskiniowiec/SKILL.md` — to jedyna kopia, którą trzeba zmieniać
+3. Otwórz PR z:
+   - **Przed:** jak jaskiniowiec odpowiada teraz
+   - **Po:** jak jaskiniowiec odpowiada po zmianie
+   - Jednym zdaniem dlaczego zmiana jest lepsza
 
-> **Note:** `caveman/SKILL.md`, `plugins/caveman/skills/caveman/SKILL.md`, `.cursor/skills/caveman/SKILL.md`, and `caveman.skill` are auto-synced by CI after merge. Do not edit them directly.
-> 
-> **Note on compress skill:** If you are modifying the compress skill, edit `caveman-compress/SKILL.md` or `caveman-compress/scripts/`. CI will automatically sync these changes to `skills/compress/` and `plugins/caveman/skills/compress/`.
+> **Uwaga:** `jaskiniowiec/SKILL.md`, `plugins/jaskiniowiec/skills/jaskiniowiec/SKILL.md`, `.cursor/skills/jaskiniowiec/SKILL.md`, `.windsurf/skills/jaskiniowiec/SKILL.md` i `jaskiniowiec.skill` są synchronizowane automatycznie przez CI po mergu. Nie edytuj ich bezpośrednio.
+>
+> **Uwaga o kompresji:** jeśli zmieniasz skill kompresji, edytuj `jaskiniowiec-compress/SKILL.md`, `jaskiniowiec-compress/scripts/` albo `skills/compress/`. CI automatycznie synchronizuje te zmiany do pozostałych kopii.
 
-Small focused change > big rewrite. Caveman like simple.
+Mała, skupiona zmiana > wielki przepis. Jaskiniowiec lubi prosto.
 
-## Ideas
+## Pomysły
 
-See [issues labeled `good first issue`](../../issues?q=label%3A%22good+first+issue%22) for starter tasks.
+Zobacz [issues oznaczone `good first issue`](../../issues?q=label%3A%22good+first+issue%22), jeśli szukasz zadania na start.

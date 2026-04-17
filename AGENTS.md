@@ -1,4 +1,4 @@
-@./skills/caveman/SKILL.md
-@./skills/caveman-commit/SKILL.md
-@./skills/caveman-review/SKILL.md
-@./caveman-compress/SKILL.md
+@./skills/jaskiniowiec/SKILL.md
+@./skills/jaskiniowiec-commit/SKILL.md
+@./skills/jaskiniowiec-review/SKILL.md
+@./jaskiniowiec-compress/SKILL.md

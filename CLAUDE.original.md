@@ -1,198 +1,141 @@
-# CLAUDE.md — caveman
+# CLAUDE.md — jaskiniowiec
 
-## README is a product artifact
+## README to artefakt produktu
 
-The README is not documentation. It is the product's front door — the thing non-technical people read to decide if caveman is worth installing. Treat it with the same care you would treat UI copy.
+README nie jest zwykłą dokumentacją. To front door produktu — tekst, który czytają osoby nietechniczne, żeby zdecydować, czy jaskiniowiec jest wart instalacji. Traktuj go z taką samą uwagą jak copy w interfejsie.
 
-**Rules for any README change:**
+**Zasady przy każdej zmianie README:**
 
-- Every sentence must be readable by someone who has never used an AI coding agent. If you write "SessionStart hook injects system context," that is invisible to most users — translate it.
-- Keep the Before/After examples as the first thing users see. They are the entire pitch.
-- The install table must always be complete and accurate. One broken install command costs a real user.
-- The feature matrix (What You Get table) must stay in sync with what the code actually does. If a feature ships or is removed, update the table.
-- Preserve the voice. Caveman speak in README on purpose. "Brain still big." "Cost go down forever." "One rock. That it." — this is intentional brand. Don't normalize it.
-- Benchmark numbers come from real runs in `benchmarks/` and `evals/`. Never invent or round numbers. Re-run if in doubt.
-- When adding a new agent to the install table, always add the corresponding detail block in the `<details>` section below it.
-- Readability check before any README commit: would a non-programmer understand what this does and how to install it within 60 seconds of reading?
-
----
-
-## Project overview
-
-Caveman makes AI coding agents respond in compressed, caveman-style prose — cutting ~65-75% of output tokens while keeping full technical accuracy. It ships as a Claude Code plugin, a Codex plugin, a Gemini CLI extension, and as agent rule files for Cursor, Windsurf, Cline, Copilot, and 40+ others via `npx skills`.
+- Każde zdanie musi być czytelne dla osoby, która nigdy nie używała agenta AI do kodu. Jeśli piszesz „hook SessionStart wstrzykuje kontekst systemowy”, przełóż to na coś zrozumiałego dla zwykłego użytkownika.
+- Przykłady Before/After mają zostać pierwszą rzeczą, którą widzi użytkownik. To cały pitch.
+- Tabela instalacji musi być zawsze kompletna i poprawna. Jedna błędna komenda oznacza realnie straconego użytkownika.
+- Macierz funkcji musi być zgodna z tym, co naprawdę robi kod. Jeśli coś dochodzi albo znika, aktualizuj tabelę.
+- Zachowaj głos README. Top-level `README.md` zostaje po angielsku i zachowuje upstreamowy styl.
+- Liczby benchmarków bierz z realnych uruchomień w `benchmarks/` i `evals/`. Nigdy ich nie wymyślaj ani nie zaokrąglaj bez podstaw.
+- Gdy dodajesz nowego agenta do tabeli instalacji, dodaj też pasujący blok `<details>`.
+- Przed każdą zmianą README zrób test czytelności: czy nietechniczna osoba zrozumie działanie i instalację w 60 sekund?
 
 ---
 
-## File structure and what owns what
+## Przegląd projektu
 
-### Single source of truth files — edit only these
-
-| File | What it controls |
-|------|-----------------|
-| `skills/caveman/SKILL.md` | Caveman behavior: intensity levels, rules, wenyan mode, auto-clarity, persistence. This is the only file to edit for caveman behavior changes. |
-| `rules/caveman-activate.md` | The body of the always-on auto-activation rule. Injected into Cursor, Windsurf, Cline, and Copilot rule files by CI. Edit here, not in the agent-specific copies. |
-| `skills/caveman-commit/SKILL.md` | Caveman commit message behavior. Fully independent skill. |
-| `skills/caveman-review/SKILL.md` | Caveman code review behavior. Fully independent skill. |
-| `caveman-compress/SKILL.md` | Compress sub-skill behavior. |
-
-### Auto-generated / auto-synced — do not edit directly
-
-These files are overwritten by CI on every push to main that touches the sources above. Edits here will be lost.
-
-| File | Synced from |
-|------|-------------|
-| `caveman/SKILL.md` | `skills/caveman/SKILL.md` |
-| `plugins/caveman/skills/caveman/SKILL.md` | `skills/caveman/SKILL.md` |
-| `.cursor/skills/caveman/SKILL.md` | `skills/caveman/SKILL.md` |
-| `.windsurf/skills/caveman/SKILL.md` | `skills/caveman/SKILL.md` |
-| `caveman.skill` | ZIP of `skills/caveman/` directory |
-| `.clinerules/caveman.md` | `rules/caveman-activate.md` |
-| `.github/copilot-instructions.md` | `rules/caveman-activate.md` |
-| `.cursor/rules/caveman.mdc` | `rules/caveman-activate.md` + Cursor frontmatter |
-| `.windsurf/rules/caveman.md` | `rules/caveman-activate.md` + Windsurf frontmatter |
+Jaskiniowiec to polskojęzyczny fork projektu caveman. Zmusza agentów kodujących AI do odpowiadania w skondensowanej polszczyźnie stylizowanej na „jaskiniową”, zwykle oszczędzając ~65–75% tokenów wyjściowych bez utraty technicznej treści. Repo dostarcza skille, reguły i dokumentację dla kilku agentów.
 
 ---
 
-## CI sync workflow
+## Struktura plików i źródła prawdy
 
-`.github/workflows/sync-skill.yml` triggers on push to main when `skills/caveman/SKILL.md` or `rules/caveman-activate.md` changes.
+### Główne pliki źródłowe — edytuj tylko je
 
-What it does:
-1. Copies `skills/caveman/SKILL.md` to all agent-specific SKILL.md locations
-2. Rebuilds `caveman.skill` as a ZIP of `skills/caveman/`
-3. Rebuilds all agent rule files from `rules/caveman-activate.md`, prepending the agent-specific frontmatter (Cursor needs `alwaysApply: true`, Windsurf needs `trigger: always_on`)
-4. Commits and pushes with `[skip ci]` to avoid loops
+| Plik | Co kontroluje |
+|------|----------------|
+| `skills/jaskiniowiec/SKILL.md` | Zachowanie głównego trybu: poziomy intensywności, zasady, auto-jasność, trwałość. To jedyne źródło prawdy dla zachowania trybu. |
+| `rules/jaskiniowiec-activate.md` | Treść reguły zawsze-włączonej aktywacji. Edytuj tutaj, nie w kopiach agent-specific. |
+| `skills/jaskiniowiec-commit/SKILL.md` | Zachowanie wiadomości commitów. Niezależny skill. |
+| `skills/jaskiniowiec-review/SKILL.md` | Zachowanie code review. Niezależny skill. |
+| `skills/jaskiniowiec-help/SKILL.md` | Karta szybkiej pomocy. Jednorazowy widok, nie trwały tryb. |
+| `jaskiniowiec-compress/SKILL.md` | Zachowanie skilla kompresji. |
 
-The CI bot commits as `github-actions[bot]`. After a PR merges, wait for this workflow before declaring the release complete.
+### Pliki generowane / synchronizowane automatycznie — nie edytuj bezpośrednio
 
----
-
-## Hook system (Claude Code)
-
-Three hooks ship in `hooks/`. They communicate via a flag file at `~/.claude/.caveman-active`.
-
-```
-SessionStart hook ──writes "full"──▶ ~/.claude/.caveman-active ◀──writes mode── UserPromptSubmit hook
-                                               │
-                                            reads
-                                               ▼
-                                      caveman-statusline.sh
-                                     [CAVEMAN] / [CAVEMAN:ULTRA] / ...
-```
-
-### `hooks/caveman-activate.js` — SessionStart hook
-
-Runs once on every Claude Code session start. Does three things:
-1. Writes `"full"` to `~/.claude/.caveman-active` (creates it if missing)
-2. Emits the caveman ruleset as hidden stdout — Claude Code injects SessionStart hook stdout as system context, invisible to the user
-3. Checks `~/.claude/settings.json` for an existing statusline config; if missing, appends a nudge telling Claude to offer setup on first interaction
-
-Silent-fails on all filesystem errors — never blocks session start.
-
-### `hooks/caveman-mode-tracker.js` — UserPromptSubmit hook
-
-Reads JSON from stdin (Claude Code passes prompt data as JSON on this hook event). Checks if the user prompt starts with `/caveman`. If yes, writes the detected mode to the flag file:
-- `/caveman` → `full`
-- `/caveman lite` → `lite`
-- `/caveman ultra` → `ultra`
-- `/caveman wenyan` or `/caveman wenyan-full` → `wenyan`
-- `/caveman wenyan-lite` → `wenyan-lite`
-- `/caveman wenyan-ultra` → `wenyan-ultra`
-- `/caveman-commit` → `commit`
-- `/caveman-review` → `review`
-- `/caveman-compress` → `compress`
-
-Detects "stop caveman" or "normal mode" in prompt and deletes the flag file.
-
-### `hooks/caveman-statusline.sh` — Statusline badge
-
-Reads the flag file. Outputs a colored badge string for the Claude Code statusline:
-- `full` or empty → `[CAVEMAN]` (orange)
-- anything else → `[CAVEMAN:<MODE_UPPERCASED>]` (orange)
-
-Configured in `~/.claude/settings.json` under `statusLine.command`.
-
-### Hook installation
-
-**Plugin install** — hooks are wired automatically by the plugin system.
-
-**Standalone install** — `hooks/install.sh` (macOS/Linux) or `hooks/install.ps1` (Windows) copies the three hook files into `~/.claude/hooks/` and patches `~/.claude/settings.json` to register SessionStart and UserPromptSubmit hooks plus the statusline.
-
-**Uninstall** — `hooks/uninstall.sh` / `hooks/uninstall.ps1` removes hook files and patches settings.json.
+Część kopii dla konkretnych agentów i bundli jest nadpisywana przez CI albo inne procesy synchronizacji. Zmiany w tych miejscach mogą zostać utracone.
 
 ---
 
-## Skill system
+## Workflow synchronizacji CI
 
-Skills are Markdown files with YAML frontmatter consumed by Claude Code's skill/plugin system and by `npx skills` for other agents.
+`.github/workflows/sync-skill.yml` uruchamia się po zmianach w głównych skillach i regułach.
 
-### Intensity levels
+Co robi:
+1. Kopiuje główny `SKILL.md` do zależnych lokalizacji
+2. Odtwarza artefakty dystrybucyjne skilli
+3. Buduje pliki reguł dla różnych agentów z jednego źródła
+4. Commituje wynik z `[skip ci]`, żeby uniknąć pętli
 
-Defined in `skills/caveman/SKILL.md`. Six levels: `lite`, `full` (default), `ultra`, `wenyan-lite`, `wenyan-full`, `wenyan-ultra`. Level persists until changed or session ends.
-
-### Auto-clarity rule
-
-Caveman drops to normal prose automatically for: security warnings, irreversible action confirmations, multi-step sequences where fragment ambiguity risks misread, and when the user is confused or repeats a question. Resumes after the clear part. This is defined in the skill and must be preserved in any SKILL.md edit.
-
-### caveman-compress
-
-Sub-skill in `caveman-compress/SKILL.md`. Takes a file path, compresses natural-language prose to caveman style, writes the compressed version to the original path, and saves a human-readable backup at `<filename>.original.md`. Validation step checks that headings, code blocks, URLs, file paths, and commands are preserved exactly. Retries up to 2 times on validation failure with targeted patches only (no full recompression). Requires Python 3.10+.
-
-### caveman-commit / caveman-review
-
-Independent skills in `skills/caveman-commit/SKILL.md` and `skills/caveman-review/SKILL.md`. Both have their own `description` and `name` frontmatter fields so they load independently. caveman-commit generates Conventional Commits format with ≤50 char subject. caveman-review outputs one-line comments in `L<line>: <severity> <problem>. <fix>.` format.
+Po mergu PR-a pamiętaj, że bot CI może dodać własny commit synchronizacyjny.
 
 ---
 
-## Agent distribution
+## System hooków (Claude Code)
 
-How caveman reaches each agent type:
+W `hooks/` są trzy hooki. Komunikują się przez plik-flagę aktywnego trybu.
 
-| Agent | Mechanism | Auto-activates? |
+W praktyce:
+- hook startu sesji ustawia domyślny tryb i wstrzykuje zasady do kontekstu
+- hook wysyłki promptu śledzi aktywację i utrzymuje styl między turami
+- statusline pokazuje aktywny tryb
+
+Hooki muszą cicho ignorować błędy systemu plików i nigdy nie mogą blokować startu sesji.
+
+---
+
+## System skilli
+
+Skille to pliki Markdown z frontmatterem YAML używane przez system skilli/pluginów Claude Code i przez `npx skills` u innych agentów.
+
+### Poziomy intensywności
+
+Zdefiniowane w `skills/jaskiniowiec/SKILL.md`. W tym forku obowiązują tylko trzy poziomy: `lite`, `full` i `ultra`. Poziom trwa do zmiany albo końca sesji.
+
+### Reguła auto-jasności
+
+Jaskiniowiec przechodzi na zwykłą prozę przy ostrzeżeniach bezpieczeństwa, działaniach nieodwracalnych, wieloetapowych instrukcjach, ryzyku niejednoznaczności i wtedy, gdy użytkownik potrzebuje doprecyzowania. Po jasnym fragmencie wraca do stylu zwięzłego.
+
+### jaskiniowiec-compress
+
+Pod-skill w `jaskiniowiec-compress/SKILL.md`. Bierze ścieżkę pliku, kompresuje prozę do stylu jaskiniowca, zapisuje wynik do oryginalnej ścieżki i odkłada czytelny backup w `<filename>.original.md`. Walidacja pilnuje, by nagłówki, bloki kodu, URL-e, ścieżki i komendy zostały zachowane.
+
+### jaskiniowiec-commit / jaskiniowiec-review
+
+Niezależne skille z własnymi polami `name` i `description`, więc mogą ładować się osobno.
+
+---
+
+## Dystrybucja do agentów
+
+Jak jaskiniowiec trafia do różnych agentów:
+
+| Agent | Mechanizm | Autoaktywacja? |
 |-------|-----------|----------------|
-| Claude Code | Plugin (hooks + skills) or standalone hooks | Yes — SessionStart hook injects rules |
-| Codex | Plugin in `plugins/caveman/` with `hooks.json` | Yes — SessionStart hook |
-| Gemini CLI | Extension with `GEMINI.md` context file | Yes — context file loads every session |
-| Cursor | `.cursor/rules/caveman.mdc` with `alwaysApply: true` | Yes — always-on rule |
-| Windsurf | `.windsurf/rules/caveman.md` with `trigger: always_on` | Yes — always-on rule |
-| Cline | `.clinerules/caveman.md` (auto-discovered) | Yes — Cline injects all .clinerules files |
-| Copilot | `.github/copilot-instructions.md` + `AGENTS.md` | Yes — repo-wide instructions |
-| Others | `npx skills add JuliusBrussee/caveman` | No — user must say `/caveman` each session |
+| Claude Code | Plugin, hooki i skille | Tak |
+| Codex | Plugin i hooki repo | Tak, jeśli hooki są aktywne |
+| Gemini CLI | Rozszerzenie z `GEMINI.md` | Tak |
+| Cursor / Windsurf / Cline / Copilot | Reguły repo / instrukcje | Zależnie od integracji |
+| Inni | `npx skills` | Zwykle nie |
 
-For agents without hook systems, the minimal always-on snippet lives in README under "Want it always on?" — keep it current with `rules/caveman-activate.md`.
+Nie obiecuj always-on tam, gdzie integracja naprawdę go nie zapewnia.
 
 ---
 
 ## Evals
 
-`evals/` has a three-arm harness:
-- `__baseline__` — no system prompt
-- `__terse__` — `Answer concisely.`
-- `<skill>` — `Answer concisely.\n\n{SKILL.md}`
+`evals/` ma trzyramienny harness:
+- `__baseline__` — bez system promptu
+- `__terse__` — krótka instrukcja zwięzłości
+- `<skill>` — ta sama instrukcja plus zawartość `SKILL.md`
 
-The honest delta for any skill is **skill vs terse**, not skill vs baseline. Baseline comparison conflates the skill with generic terseness — that is cheating. The harness is designed to prevent this.
+Uczciwa delta to **skill vs terse**, nie skill vs baseline. Inaczej mieszasz efekt skilla z samym poleceniem „pisz krótko”.
 
-`llm_run.py` calls `claude -p --system-prompt ...` per (prompt, arm), saves output to `evals/snapshots/results.json`. `measure.py` reads the snapshot offline with tiktoken (OpenAI BPE — approximates Claude's tokenizer, ratios are meaningful, absolute numbers are approximate).
+`llm_run.py` wywołuje `claude -p --system-prompt ...` dla każdej pary (prompt, ramię), zapisuje wynik do `evals/snapshots/results.json`. `measure.py` liczy tokeny offline przez tiktoken. Proporcje mają sens; wartości bezwzględne są przybliżone.
 
-To add a skill: drop `skills/<name>/SKILL.md`. The harness auto-discovers it. To add a prompt: append a line to `evals/prompts/en.txt`.
-
-Snapshots are committed to git. CI reads them without API calls. Only regenerate the snapshot when SKILL.md files or prompts change.
+Aby dodać skill: dodaj `skills/<name>/SKILL.md`. Aby dodać prompt: dopisz linię do `evals/prompts/en.txt`.
 
 ---
 
-## Benchmarks
+## Benchmarki
 
-`benchmarks/` runs real prompts through the Claude API (not Claude Code CLI) and records raw token counts. Results are committed as JSON in `benchmarks/results/`. The benchmark table in README is generated from these results — update it when regenerating.
+`benchmarks/` przepuszcza prawdziwe prompty przez API Claude i zapisuje surowe liczby tokenów. Wyniki są wersjonowane jako JSON, a tabela w README ma wynikać z tych danych.
 
-To reproduce: `uv run python benchmarks/run.py` (needs `ANTHROPIC_API_KEY` in `.env.local`).
+Odtworzenie: `uv run python benchmarks/run.py` (wymaga `ANTHROPIC_API_KEY` w `.env.local`).
 
 ---
 
-## Key rules for agents working here
+## Kluczowe zasady dla agentów pracujących tutaj
 
-- Edit `skills/caveman/SKILL.md` for behavior changes. Never edit synced copies.
-- Edit `rules/caveman-activate.md` for auto-activation rule changes. Never edit agent-specific rule copies.
-- The README is the most important file in the repo for user-facing impact. Optimize it for non-technical readers. Preserve the caveman voice.
-- Benchmark and eval numbers must be real. Never fabricate or estimate them.
-- The CI workflow commits back to main after merge. Account for this when checking branch state.
-- Hook files must silent-fail on all filesystem errors. Never let a hook crash block session start.
+- Edytuj `skills/jaskiniowiec/SKILL.md`, jeśli zmieniasz zachowanie trybu.
+- Edytuj `rules/jaskiniowiec-activate.md`, jeśli zmieniasz regułę autoaktywacji.
+- `README.md` jest najważniejszym plikiem produktowym, ale w tym zadaniu ma pozostać po angielsku.
+- Liczby benchmarków i evali muszą być prawdziwe. Bez zgadywania.
+- Hooki mają cicho znosić błędy systemu plików. Nie mogą psuć startu sesji.
+- Dokumentacja w tym zakresie ma być po polsku, spójna brandingowo i bez wariantów Wenyan / chińskich.
+- Upstream `caveman` wolno wskazywać tylko jako źródło inspiracji albo pochodzenia forka.
