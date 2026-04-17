@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Benchmark caveman vs normal Claude output token counts."""
+"""Benchmark jaskiniowiec vs normal Claude output token counts."""
 
 import argparse
 import hashlib
@@ -11,9 +11,6 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-import anthropic
-
-# Load .env.local from repo root if it exists
 _env_file = Path(__file__).parent.parent / ".env.local"
 if _env_file.exists():
     for line in _env_file.read_text().splitlines():
@@ -26,7 +23,7 @@ SCRIPT_VERSION = "1.0.0"
 SCRIPT_DIR = Path(__file__).parent
 REPO_DIR = SCRIPT_DIR.parent
 PROMPTS_PATH = SCRIPT_DIR / "prompts.json"
-SKILL_PATH = REPO_DIR / "skills" / "caveman" / "SKILL.md"
+SKILL_PATH = REPO_DIR / "skills" / "jaskiniowiec" / "SKILL.md"
 README_PATH = REPO_DIR / "README.md"
 RESULTS_DIR = SCRIPT_DIR / "results"
 
@@ -41,7 +38,7 @@ def load_prompts():
     return data["prompts"]
 
 
-def load_caveman_system():
+def load_jaskiniowiec_system():
     return SKILL_PATH.read_text()
 
 
@@ -51,6 +48,14 @@ def sha256_file(path):
 
 def call_api(client, model, system, prompt, max_retries=3):
     delays = [5, 10, 20]
+
+    try:
+        import anthropic
+    except ImportError as exc:
+        raise RuntimeError(
+            "Missing dependency 'anthropic'. Install it before running live benchmarks."
+        ) from exc
+
     for attempt in range(max_retries + 1):
         try:
             response = client.messages.create(
@@ -75,7 +80,7 @@ def call_api(client, model, system, prompt, max_retries=3):
                 raise
 
 
-def run_benchmarks(client, model, prompts, caveman_system, trials):
+def run_benchmarks(client, model, prompts, jaskiniowiec_system, trials):
     results = []
     total = len(prompts)
 
@@ -87,10 +92,10 @@ def run_benchmarks(client, model, prompts, caveman_system, trials):
             "category": prompt_entry["category"],
             "prompt": prompt_text,
             "normal": [],
-            "caveman": [],
+            "jaskiniowiec": [],
         }
 
-        for mode, system in [("normal", NORMAL_SYSTEM), ("caveman", caveman_system)]:
+        for mode, system in [("normal", NORMAL_SYSTEM), ("jaskiniowiec", jaskiniowiec_system)]:
             for t in range(1, trials + 1):
                 print(
                     f"  [{i}/{total}] {pid} | {mode} | trial {t}/{trials}",
@@ -113,10 +118,10 @@ def compute_stats(results):
         normal_medians = statistics.median(
             [t["output_tokens"] for t in entry["normal"]]
         )
-        caveman_medians = statistics.median(
-            [t["output_tokens"] for t in entry["caveman"]]
+        jaskiniowiec_medians = statistics.median(
+            [t["output_tokens"] for t in entry["jaskiniowiec"]]
         )
-        savings = 1 - (caveman_medians / normal_medians) if normal_medians > 0 else 0
+        savings = 1 - (jaskiniowiec_medians / normal_medians) if normal_medians > 0 else 0
         all_savings.append(savings)
 
         rows.append(
@@ -125,7 +130,7 @@ def compute_stats(results):
                 "category": entry["category"],
                 "prompt": entry["prompt"],
                 "normal_median": int(normal_medians),
-                "caveman_median": int(caveman_medians),
+                "jaskiniowiec_median": int(jaskiniowiec_medians),
                 "savings_pct": round(savings * 100),
             }
         )
@@ -134,14 +139,14 @@ def compute_stats(results):
     min_savings = round(min(all_savings) * 100)
     max_savings = round(max(all_savings) * 100)
     avg_normal = round(statistics.mean([r["normal_median"] for r in rows]))
-    avg_caveman = round(statistics.mean([r["caveman_median"] for r in rows]))
+    avg_jaskiniowiec = round(statistics.mean([r["jaskiniowiec_median"] for r in rows]))
 
     return rows, {
         "avg_savings": avg_savings,
         "min_savings": min_savings,
         "max_savings": max_savings,
         "avg_normal": avg_normal,
-        "avg_caveman": avg_caveman,
+        "avg_jaskiniowiec": avg_jaskiniowiec,
     }
 
 
@@ -163,16 +168,16 @@ def format_prompt_label(prompt_id):
 
 def format_table(rows, summary):
     lines = [
-        "| Task | Normal (tokens) | Caveman (tokens) | Saved |",
-        "|------|---------------:|----------------:|------:|",
+        "| Task | Normal (tokens) | Jaskiniowiec (tokens) | Saved |",
+        "|------|---------------:|---------------------:|------:|",
     ]
     for r in rows:
         label = format_prompt_label(r["id"])
         lines.append(
-            f"| {label} | {r['normal_median']} | {r['caveman_median']} | {r['savings_pct']}% |"
+            f"| {label} | {r['normal_median']} | {r['jaskiniowiec_median']} | {r['savings_pct']}% |"
         )
     lines.append(
-        f"| **Average** | **{summary['avg_normal']}** | **{summary['avg_caveman']}** | **{summary['avg_savings']}%** |"
+        f"| **Average** | **{summary['avg_normal']}** | **{summary['avg_jaskiniowiec']}** | **{summary['avg_savings']}%** |"
     )
     lines.append("")
     lines.append(
@@ -237,7 +242,7 @@ def dry_run(prompts, model, trials):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Benchmark caveman vs normal Claude")
+    parser = argparse.ArgumentParser(description="Benchmark jaskiniowiec vs normal Claude")
     parser.add_argument("--trials", type=int, default=3, help="Trials per prompt per mode (default: 3)")
     parser.add_argument("--dry-run", action="store_true", help="Print config, no API calls")
     parser.add_argument("--update-readme", action="store_true", help="Update README.md benchmark table")
@@ -250,7 +255,16 @@ def main():
         dry_run(prompts, args.model, args.trials)
         return
 
-    caveman_system = load_caveman_system()
+    try:
+        import anthropic
+    except ImportError:
+        print(
+            "ERROR: Missing dependency 'anthropic'. Install it before running live benchmarks.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    jaskiniowiec_system = load_jaskiniowiec_system()
     skill_hash = sha256_file(SKILL_PATH)
 
     client = anthropic.Anthropic()
@@ -259,7 +273,7 @@ def main():
     print(f"Model: {args.model}", file=sys.stderr)
     print(file=sys.stderr)
 
-    results = run_benchmarks(client, args.model, prompts, caveman_system, args.trials)
+    results = run_benchmarks(client, args.model, prompts, jaskiniowiec_system, args.trials)
     rows, summary = compute_stats(results)
     table_md = format_table(rows, summary)
 

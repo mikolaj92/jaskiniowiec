@@ -1,84 +1,61 @@
 # Evals
 
-Measures real token compression of caveman skills by running the same
-prompts through Claude Code under three conditions and comparing the
-generated output token counts.
+Mierzy rzeczywistą kompresję tokenów dla skilli jaskiniowca, uruchamiając te same prompty w Claude Code w trzech warunkach i porównując liczbę tokenów w wygenerowanej odpowiedzi.
 
-## The three arms
+## Trzy ramiona testu
 
-| Arm | System prompt |
+| Ramię | System prompt |
 |-----|--------------|
-| `__baseline__` | none |
-| `__terse__` | `Answer concisely.` |
-| `<skill>` | `Answer concisely.\n\n{SKILL.md}` |
+| `__baseline__` | brak |
+| `__terse__` | `Odpowiadaj zwięźle.` |
+| `<skill>` | `Odpowiadaj zwięźle.\n\n{SKILL.md}` |
 
-The honest delta for any skill is **`<skill>` vs `__terse__`** — i.e.
-how much the skill itself adds on top of a plain "be terse" instruction.
-Comparing a skill to the no-system-prompt baseline conflates the skill
-with the generic terseness ask, which is what an earlier version of
-this harness did and is why its numbers were inflated.
+Uczciwa delta dla dowolnego skilla to **`<skill>` vs `__terse__`** — czyli ile sam skill dokłada ponad zwykłe polecenie „pisz krótko”. Porównywanie skilla do wariantu bez system promptu miesza wpływ skilla z ogólną zwięzłością; wcześniejsza wersja harnessu robiła właśnie to i dlatego zawyżała wyniki.
 
-## Why this design
+## Dlaczego tak
 
-- **Real LLM output**, not hand-written examples (no circularity).
-- **Same Claude Code** the skills target — no separate API key.
-- **Snapshot committed to git** so CI runs are deterministic and free,
-  and so any change to the numbers is reviewable as a diff.
-- **Control arm** isolates the skill's contribution from the generic
-  "be terse" effect.
+- **Prawdziwe wyjście LLM**, nie ręcznie pisane przykłady.
+- **Ten sam Claude Code**, pod który celują skille — bez osobnego klucza API.
+- **Snapshot w git**, więc uruchomienia CI są deterministyczne i darmowe, a każdą zmianę liczb da się zrecenzować jako diff.
+- **Ramię kontrolne** oddziela wkład skilla od zwykłego efektu „pisz krótko”.
 
-## Files
+## Pliki
 
-- `prompts/en.txt` — fixed list of dev questions, one per line.
-- `llm_run.py` — runs `claude -p --system-prompt …` per (prompt, arm),
-  captures real LLM output, writes `snapshots/results.json` along with
-  metadata (model, CLI version, generation timestamp).
-- `measure.py` — reads the snapshot, counts tokens with tiktoken
-  `o200k_base`, prints a markdown table with median / mean / min / max /
-  stdev across prompts.
-- `snapshots/results.json` — committed source of truth, regenerated only
-  when SKILL.md files or prompts change.
+- `prompts/en.txt` — stała lista pytań developerskich, po jednym w linii.
+- `llm_run.py` — uruchamia `claude -p --system-prompt …` dla każdej pary (prompt, ramię), zapisuje prawdziwe wyjście LLM do `snapshots/results.json` wraz z metadanymi (model, wersja CLI, czas generacji).
+- `measure.py` — czyta snapshot, liczy tokeny przez tiktoken `o200k_base`, wypisuje tabelę Markdown z medianą / średnią / min / max / odchyleniem standardowym.
+- `snapshots/results.json` — wersjonowane źródło prawdy, odświeżane tylko wtedy, gdy zmienia się `SKILL.md` albo prompty.
 
-## Refresh the snapshot (requires `claude` CLI logged in)
+## Odśwież snapshot (wymaga zalogowanego CLI `claude`)
 
 ```bash
 uv run python evals/llm_run.py
 ```
 
-This calls Claude once per prompt × (N skills + 2 control arms). Use
-a small model to keep it cheap:
+To wywołuje Claude raz dla każdego promptu × (N skilli + 2 ramiona kontrolne). Żeby było taniej, użyj mniejszego modelu:
 
 ```bash
-CAVEMAN_EVAL_MODEL=claude-haiku-4-5 uv run python evals/llm_run.py
+JASKINIOWIEC_EVAL_MODEL=claude-haiku-4-5 uv run python evals/llm_run.py
 ```
 
-## Read the snapshot (no LLM, no API key, runs in CI)
+## Odczytaj snapshot (bez LLM, bez API key, działa w CI)
 
 ```bash
 uv run --with tiktoken python evals/measure.py
 ```
 
-## Adding a prompt
+## Dodanie promptu
 
-Append a line to `prompts/en.txt`, then refresh the snapshot.
+Dopisz linię do `prompts/en.txt`, potem odśwież snapshot.
 
-## Adding a skill
+## Dodanie skilla
 
-Drop a `skills/<name>/SKILL.md`, then refresh the snapshot. `llm_run.py`
-picks up every skill directory automatically.
+Dodaj `skills/<name>/SKILL.md`, potem odśwież snapshot. `llm_run.py` automatycznie wykrywa każdy katalog ze skillem.
 
-## What this does NOT measure
+## Czego to NIE mierzy
 
-- **Fidelity** — does the compressed answer preserve the technical
-  claims? A skill that replies `k` to everything would score −99% and
-  "win". A future v2 could add a judge-model rubric.
-- **Latency or cost** — out of scope. Note that skills add input tokens
-  on every call, so output savings are not the full economic picture.
-- **Cross-model behavior** — only the model used to generate the
-  snapshot is measured.
-- **Exact Claude tokens** — `tiktoken o200k_base` is OpenAI's BPE and is
-  only an approximation of Claude's tokenizer. Ratios between arms are
-  meaningful; absolute numbers are approximate.
-- **Statistical significance** — single run per (prompt, arm) at default
-  temperature. The min/max/stdev columns let you eyeball whether a
-  number is solid or noisy, but this is not a powered experiment.
+- **Wierności** — czy skrócona odpowiedź zachowuje techniczną treść? Skill odpowiadający wszędzie `ok` wygrałby samą kompresją. W przyszłości można dodać ocenę osobnym modelem.
+- **Opóźnienia ani kosztu** — poza zakresem. Skille dodają tokeny wejściowe przy każdym wywołaniu, więc oszczędność na wyjściu nie pokazuje całej ekonomii.
+- **Zachowania między modelami** — mierzymy tylko model użyty do wygenerowania snapshotu.
+- **Dokładnych tokenów Claude** — `tiktoken o200k_base` to BPE OpenAI, więc tylko przybliża tokenizer Claude. Proporcje między ramionami są sensowne; wartości bezwzględne są przybliżone.
+- **Istotności statystycznej** — jedno uruchomienie na parę (prompt, ramię) przy domyślnej temperaturze. Kolumny min/max/stdev pomagają ocenić szum, ale to nie jest pełny eksperyment statystyczny.

@@ -1,10 +1,10 @@
-Why does my React component re-render every time the parent updates?
-Explain database connection pooling.
-What's the difference between TCP and UDP?
-How do I fix a memory leak in a long-running Node.js process?
-What does the SQL EXPLAIN command tell me?
-How does a hash table handle collisions?
-Why am I getting CORS errors in my browser console?
-What's the point of using a debouncer on a search input?
-How does git rebase differ from git merge?
-When should I use a queue vs a topic in messaging systems?
+Dlaczego mój komponent React renderuje się ponownie przy każdej aktualizacji rodzica?
+Wyjaśnij pooling połączeń z bazą danych.
+Jaka jest różnica między TCP a UDP?
+Jak naprawić wyciek pamięci w długo działającym procesie Node.js?
+Co mówi polecenie SQL EXPLAIN?
+Jak tablica haszująca obsługuje kolizje?
+Dlaczego w konsoli przeglądarki widzę błędy CORS?
+Po co używać debounce na polu wyszukiwania?
+Czym różni się git rebase od git merge?
+Kiedy używać kolejki zamiast topicu w systemach wiadomości?

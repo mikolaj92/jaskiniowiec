@@ -21,15 +21,18 @@ Requires:
 Run: uv run python evals/llm_run.py
 
 Environment:
-  CAVEMAN_EVAL_MODEL  optional --model flag value passed through to claude
+  JASKINIOWIEC_EVAL_MODEL  optional --model flag value passed through to claude
 """
 
 from __future__ import annotations
 
+import argparse
 import datetime as dt
 import json
 import os
+import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 EVALS = Path(__file__).parent
@@ -44,7 +47,7 @@ def run_claude(prompt: str, system: str | None = None) -> str:
     cmd = ["claude", "-p"]
     if system:
         cmd += ["--system-prompt", system]
-    if model := os.environ.get("CAVEMAN_EVAL_MODEL"):
+    if model := os.environ.get("JASKINIOWIEC_EVAL_MODEL"):
         cmd += ["--model", model]
     cmd.append(prompt)
     out = subprocess.run(cmd, capture_output=True, text=True, check=True)
@@ -61,7 +64,37 @@ def claude_version() -> str:
         return "unknown"
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Generate eval snapshots for baseline, terse, and jaskiniowiec skill arms."
+    )
+    parser.add_argument(
+        "--check-prereqs",
+        action="store_true",
+        help="Only validate local prerequisites and exit.",
+    )
+    return parser.parse_args()
+
+
+
+def ensure_claude_available() -> None:
+    if shutil.which("claude") is None:
+        print(
+            "ERROR: Missing 'claude' CLI on PATH. Install and authenticate Claude Code before running eval snapshots.",
+            file=sys.stderr,
+        )
+        raise SystemExit(1)
+
+
+
 def main() -> None:
+    args = parse_args()
+    ensure_claude_available()
+
+    if args.check_prereqs:
+        print("OK: 'claude' CLI detected on PATH.")
+        return
+
     prompts = [p.strip() for p in PROMPTS.read_text().splitlines() if p.strip()]
     skills = sorted(p.name for p in SKILLS.iterdir() if (p / "SKILL.md").exists())
 
@@ -70,11 +103,11 @@ def main() -> None:
         flush=True,
     )
 
-    snapshot: dict = {
+    snapshot: dict[str, object] = {
         "metadata": {
             "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(),
             "claude_cli_version": claude_version(),
-            "model": os.environ.get("CAVEMAN_EVAL_MODEL", "default"),
+            "model": os.environ.get("JASKINIOWIEC_EVAL_MODEL", "default"),
             "n_prompts": len(prompts),
             "terse_prefix": TERSE_PREFIX,
         },
@@ -82,19 +115,20 @@ def main() -> None:
         "arms": {},
     }
 
+    arms = snapshot["arms"]
+    assert isinstance(arms, dict)
+
     print("baseline (no system prompt)", flush=True)
-    snapshot["arms"]["__baseline__"] = [run_claude(p) for p in prompts]
+    arms["__baseline__"] = [run_claude(p) for p in prompts]
 
     print("terse (control: terse instruction only, no skill)", flush=True)
-    snapshot["arms"]["__terse__"] = [
-        run_claude(p, system=TERSE_PREFIX) for p in prompts
-    ]
+    arms["__terse__"] = [run_claude(p, system=TERSE_PREFIX) for p in prompts]
 
     for skill in skills:
         skill_md = (SKILLS / skill / "SKILL.md").read_text()
         system = f"{TERSE_PREFIX}\n\n{skill_md}"
         print(f"  {skill}", flush=True)
-        snapshot["arms"][skill] = [run_claude(p, system=system) for p in prompts]
+        arms[skill] = [run_claude(p, system=system) for p in prompts]
 
     SNAPSHOT.parent.mkdir(parents=True, exist_ok=True)
     SNAPSHOT.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2))

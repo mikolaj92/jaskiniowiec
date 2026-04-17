@@ -4,52 +4,52 @@
     {
       "id": "react-rerender",
       "category": "debugging",
-      "prompt": "Why is my React component re-rendering on every state update even though the props haven't changed? I'm passing an object as a prop."
+      "prompt": "Dlaczego mój komponent React renderuje się ponownie przy każdej aktualizacji stanu, mimo że propsy się nie zmieniły? Przekazuję obiekt jako prop."
     },
     {
       "id": "auth-middleware-fix",
       "category": "bugfix",
-      "prompt": "My Express auth middleware is letting expired JWT tokens through. The expiry check uses Date.now() compared to the token's exp field. What's wrong and how do I fix it?"
+      "prompt": "Mój middleware autoryzacji w Express przepuszcza wygasłe tokeny JWT. Sprawdzenie wygaśnięcia porównuje Date.now() z polem exp tokenu. Co jest nie tak i jak to naprawić?"
     },
     {
       "id": "postgres-pool",
       "category": "setup",
-      "prompt": "How do I set up a PostgreSQL connection pool in Node.js with proper timeout and error handling configuration?"
+      "prompt": "Jak skonfigurować pulę połączeń PostgreSQL w Node.js z poprawnymi timeoutami i obsługą błędów?"
     },
     {
       "id": "git-rebase-merge",
       "category": "explanation",
-      "prompt": "Explain the difference between git rebase and git merge. When should I use each one and what are the tradeoffs?"
+      "prompt": "Wyjaśnij różnicę między git rebase a git merge. Kiedy używać każdego z nich i jakie są kompromisy?"
     },
     {
       "id": "async-refactor",
       "category": "refactor",
-      "prompt": "Refactor this callback-based Node.js function to use async/await:\n\nfunction getUser(id, callback) {\n  db.query('SELECT * FROM users WHERE id = ?', [id], function(err, rows) {\n    if (err) return callback(err);\n    if (!rows.length) return callback(new Error('Not found'));\n    callback(null, rows[0]);\n  });\n}"
+      "prompt": "Przerób tę funkcję Node.js opartą na callbackach na async/await:\n\nfunction getUser(id, callback) {\n  db.query('SELECT * FROM users WHERE id = ?', [id], function(err, rows) {\n    if (err) return callback(err);\n    if (!rows.length) return callback(new Error('Not found'));\n    callback(null, rows[0]);\n  });\n}"
     },
     {
       "id": "microservices-monolith",
       "category": "architecture",
-      "prompt": "We have a monolithic Django app that's getting slow. The team is debating microservices. What are the key factors to consider before splitting up the monolith?"
+      "prompt": "Mamy monolityczną aplikację Django, która zaczyna zwalniać. Zespół rozważa mikroserwisy. Jakie kluczowe czynniki trzeba ocenić, zanim zaczniemy rozbijać monolit?"
     },
     {
       "id": "pr-security-review",
       "category": "code-review",
-      "prompt": "Review this Express route handler for security issues:\n\napp.get('/api/users/:id', (req, res) => {\n  const query = `SELECT * FROM users WHERE id = ${req.params.id}`;\n  db.query(query).then(user => res.json(user));\n});"
+      "prompt": "Przejrzyj ten handler trasy w Express pod kątem bezpieczeństwa:\n\napp.get('/api/users/:id', (req, res) => {\n  const query = `SELECT * FROM users WHERE id = ${req.params.id}`;\n  db.query(query).then(user => res.json(user));\n});"
     },
     {
       "id": "docker-multi-stage",
       "category": "devops",
-      "prompt": "Write a multi-stage Dockerfile for a Node.js TypeScript application that minimizes the final image size. The app uses npm and needs to compile TypeScript before running."
+      "prompt": "Napisz wieloetapowy Dockerfile dla aplikacji Node.js w TypeScript, który minimalizuje rozmiar finalnego obrazu. Aplikacja używa npm i musi skompilować TypeScript przed uruchomieniem."
     },
     {
       "id": "race-condition-debug",
       "category": "debugging",
-      "prompt": "My Node.js API endpoint that increments a counter in PostgreSQL sometimes returns the same value for concurrent requests. How do I fix this race condition?"
+      "prompt": "Mój endpoint API w Node.js, który inkrementuje licznik w PostgreSQL, czasem zwraca tę samą wartość dla równoległych żądań. Jak naprawić ten race condition?"
     },
     {
       "id": "error-boundary",
       "category": "implementation",
-      "prompt": "Implement a React error boundary component that catches render errors, shows a fallback UI with a retry button, and logs the error details."
+      "prompt": "Zaimplementuj komponent React typu error boundary, który przechwytuje błędy renderowania, pokazuje zapasowy interfejs z przyciskiem ponów i loguje szczegóły błędu."
     }
   ]
 }
