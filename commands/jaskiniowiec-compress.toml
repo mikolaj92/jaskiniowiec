@@ -1,0 +1,2 @@
+description = "Skompresuj plik pamięci do stylu jaskiniowca"
+prompt = "Skompresuj plik {{args}} do stylu jaskiniowca. Uruchom skill jaskiniowiec-compress: zrób backup FILE.original.md, nadpisz oryginał wersją skompresowaną. Zachowaj kod, URL-e, ścieżki i komendy. Jeśli nie podano ścieżki, poproś o nią."

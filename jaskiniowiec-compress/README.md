@@ -17,7 +17,7 @@ Claude czyta `CLAUDE.md` przy starcie każdej sesji. Duży plik = większy koszt
 ## Co robi
 
 ```
-/jaskiniowiec:compress CLAUDE.md
+/jaskiniowiec-compress CLAUDE.md
 ```
 
 ```
@@ -71,7 +71,7 @@ Wszystkie walidacje przeszły ✅ — nagłówki, bloki kodu, URL-e i ścieżki 
 
 ## Instalacja
 
-Kompresja jest częścią rodziny skilli jaskiniowca. Użyj `/jaskiniowiec:compress` w środowisku, które ładuje ten skill.
+Kompresja jest częścią rodziny skilli jaskiniowca. Użyj `/jaskiniowiec-compress` w środowisku, które ładuje ten skill.
 
 Jeśli potrzebujesz lokalnych plików, skill leży w:
 
@@ -84,14 +84,14 @@ jaskiniowiec-compress/
 ## Użycie
 
 ```
-/jaskiniowiec:compress <ścieżka>
+/jaskiniowiec-compress <ścieżka>
 ```
 
 Przykłady:
 ```
-/jaskiniowiec:compress CLAUDE.md
-/jaskiniowiec:compress docs/preferences.md
-/jaskiniowiec:compress todos.md
+/jaskiniowiec-compress CLAUDE.md
+/jaskiniowiec-compress docs/preferences.md
+/jaskiniowiec-compress todos.md
 ```
 
 ### Jakie pliki działają
@@ -106,7 +106,7 @@ Przykłady:
 ## Jak to działa
 
 ```
-/jaskiniowiec:compress CLAUDE.md
+/jaskiniowiec-compress CLAUDE.md
         ↓
 wykrycie typu pliku      (bez tokenów)
         ↓

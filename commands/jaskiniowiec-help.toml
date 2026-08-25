@@ -1,0 +1,2 @@
+description = "Pokaż kartę pomocy jaskiniowca"
+prompt = "Pokaż kartę pomocy jaskiniowca. Jednorazowo — nie zmieniaj trybu, nie zapisuj flag. Wypisz poziomy, skille i komendy według skills/jaskiniowiec-help/SKILL.md."
