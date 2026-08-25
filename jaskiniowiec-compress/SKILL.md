@@ -6,7 +6,7 @@ description: >
   treść techniczną, kod, URL-e i strukturę.
   Wersja skompresowana nadpisuje oryginał. Czytelny backup trafia do
   FILE.original.md.
-  Wyzwalacz: /jaskiniowiec:compress <ścieżka> albo „skompresuj plik pamięci”.
+  Wyzwalacz: /jaskiniowiec-compress <ścieżka> albo „skompresuj plik pamięci”.
 ---
 
 # Jaskiniowiec Compress
@@ -17,7 +17,7 @@ Kompresuj pliki naturalnojęzykowe (`CLAUDE.md`, todo, preferencje) do stylu jas
 
 ## Wyzwalacz
 
-`/jaskiniowiec:compress <ścieżka>` albo prośba użytkownika o skompresowanie pliku pamięci.
+`/jaskiniowiec-compress <ścieżka>` albo prośba użytkownika o skompresowanie pliku pamięci.
 
 ## Proces
 

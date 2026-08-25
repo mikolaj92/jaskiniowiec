@@ -27,7 +27,7 @@ Tryb trwa do zmiany albo końca sesji.
 |-------|-----------|----------|
 | **jaskiniowiec-commit** | `/jaskiniowiec-commit` | Zwięzłe wiadomości commitów. Conventional Commits. Temat ≤50 znaków. |
 | **jaskiniowiec-review** | `/jaskiniowiec-review` | Jednolinijkowe komentarze do PR: `L42: bug: user null. Add guard.` |
-| **jaskiniowiec-compress** | `/jaskiniowiec:compress <plik>` | Kompresuje pliki `.md` do stylu jaskiniowca. Oszczędza ~46% tokenów wejściowych. |
+| **jaskiniowiec-compress** | `/jaskiniowiec-compress <plik>` | Kompresuje pliki `.md` do stylu jaskiniowca. Oszczędza ~46% tokenów wejściowych. |
 | **jaskiniowiec-help** | `/jaskiniowiec-help` | Ta karta. |
 
 ## Wyłączanie
