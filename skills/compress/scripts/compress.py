@@ -16,6 +16,11 @@ OUTER_FENCE_REGEX = re.compile(
     r"\A\s*(`{3,}|~{3,})[^\n]*\n(.*)\n\1\s*\Z", re.DOTALL
 )
 
+# Filenames and paths that almost certainly hold secrets or PII. Compressing
+# them ships raw bytes to the Anthropic API — a third-party data boundary that
+# developers on sensitive codebases cannot cross. detect.py already skips .env
+# by extension, but credentials.md / secrets.txt / ~/.aws/credentials would
+# slip through the natural-language filter. This is a hard refuse before read.
 SENSITIVE_BASENAME_REGEX = re.compile(
     r"(?ix)^("
     r"\.env(\..+)?"
@@ -46,6 +51,7 @@ def is_sensitive_path(filepath: Path) -> bool:
     lowered_parts = {p.lower() for p in filepath.parts}
     if lowered_parts & SENSITIVE_PATH_COMPONENTS:
         return True
+    # Normalizuj separatory, żeby „api-key” i „api_key” pasowały do „apikey”.
     lower = re.sub(r"[_\-\s.]", "", name.lower())
     return any(tok in lower for tok in SENSITIVE_NAME_TOKENS)
 
@@ -140,6 +146,9 @@ COMPRESSED (fix this):
 
 Return ONLY the fixed compressed file. No explanation.
 """
+
+
+# ---------- Core Logic ----------
 
 
 def compress_file(filepath: Path) -> bool:
